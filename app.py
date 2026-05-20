@@ -36,10 +36,12 @@ def get_whatsapp_client() -> WhatsAppClient:
 
 
 @app.get("/")
+@app.get("/api")
 def health() -> tuple[dict[str, str], int]:
     return {"status": "ok", "service": "whatsapp-gemini-agent"}, 200
 
 
+@app.get("/api/admin/templates")
 @app.get("/admin/templates")
 def list_templates() -> tuple[Response, int] | Response:
     auth_error = require_admin()
@@ -50,6 +52,7 @@ def list_templates() -> tuple[Response, int] | Response:
     return jsonify(templates), 200
 
 
+@app.post("/api/admin/send-template")
 @app.post("/admin/send-template")
 def send_template() -> tuple[Response, int] | Response:
     auth_error = require_admin()
@@ -80,6 +83,7 @@ def send_template() -> tuple[Response, int] | Response:
     return jsonify(result), 200
 
 
+@app.get("/api/webhook")
 @app.get("/webhook")
 def verify_webhook() -> Response:
     mode = request.args.get("hub.mode")
@@ -94,6 +98,7 @@ def verify_webhook() -> Response:
     return Response("Forbidden", status=403)
 
 
+@app.post("/api/webhook")
 @app.post("/webhook")
 def receive_webhook() -> Response | tuple[Response, int]:
     raw_body = request.get_data()
