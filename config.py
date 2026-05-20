@@ -14,6 +14,13 @@ def _get_int(name: str, default: int) -> int:
     return int(value)
 
 
+def _get_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None or value == "":
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 @dataclass(frozen=True)
 class Settings:
     flask_host: str = os.getenv("FLASK_HOST", "0.0.0.0")
@@ -44,6 +51,7 @@ class Settings:
         "You are a helpful WhatsApp assistant. Keep replies concise, friendly, and useful.",
     )
     max_reply_chars: int = _get_int("MAX_REPLY_CHARS", 3500)
+    process_messages_async: bool = _get_bool("PROCESS_MESSAGES_ASYNC", False)
 
 
 settings = Settings()

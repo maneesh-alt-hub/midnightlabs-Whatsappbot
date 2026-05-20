@@ -32,6 +32,9 @@ ADMIN_API_KEY=make-a-random-admin-secret
 GEMINI_API_KEY=your-gemini-api-key
 GEMINI_MODEL=gemini-flash-lite-latest
 GEMINI_FALLBACK_MODELS=gemini-2.5-flash,gemini-2.0-flash-lite,gemini-2.0-flash
+BOT_SYSTEM_PROMPT=You are a helpful WhatsApp assistant. Keep replies concise, friendly, and useful.
+MAX_REPLY_CHARS=3500
+PROCESS_MESSAGES_ASYNC=false
 ```
 
 Run the Flask app:
@@ -148,6 +151,29 @@ Create a Render Web Service from this GitHub repo.
 - Add the same environment variables from `.env.example` in Render's Environment tab.
 - After deploy, use `https://your-render-service.onrender.com/webhook` as the Meta callback URL.
 - Keep `WHATSAPP_VERIFY_TOKEN` exactly the same in Render and Meta.
+
+## Deploying To Vercel
+
+Vercel supports Flask as a Python Function. This repo uses `.python-version` set to `3.12`, which is one of Vercel's supported Python versions.
+
+In Vercel:
+
+1. Import this GitHub repo.
+2. Keep the framework preset as Python/Other if Vercel asks.
+3. Add every variable from `.env.example` in Project Settings / Environment Variables.
+4. Do not upload `.env`.
+5. Deploy.
+6. Open `https://your-vercel-domain.vercel.app/` and check for the health JSON.
+7. Set Meta's callback URL to `https://your-vercel-domain.vercel.app/webhook`.
+8. Keep the same `WHATSAPP_VERIFY_TOKEN` in Vercel and Meta.
+
+For Vercel, keep:
+
+```env
+PROCESS_MESSAGES_ASYNC=false
+```
+
+Serverless platforms may stop background work after the HTTP response is returned, so the bot handles the WhatsApp message before returning `200`.
 
 ## References
 

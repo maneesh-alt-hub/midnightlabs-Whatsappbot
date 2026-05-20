@@ -106,7 +106,10 @@ def receive_webhook() -> Response | tuple[Response, int]:
     incoming_messages = parse_incoming_text_messages(payload)
     for incoming in incoming_messages:
         if mark_processed(incoming.message_id):
-            executor.submit(handle_message, incoming)
+            if settings.process_messages_async:
+                executor.submit(handle_message, incoming)
+            else:
+                handle_message(incoming)
 
     return jsonify({"status": "received"}), 200
 
