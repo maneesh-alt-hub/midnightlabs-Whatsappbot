@@ -154,7 +154,7 @@ Create a Render Web Service from this GitHub repo.
 
 ## Deploying To Vercel
 
-Vercel supports Flask as a Python Function. This repo uses `.python-version` set to `3.12`, which is one of Vercel's supported Python versions.
+Vercel supports Flask as a Python Function. This repo lets Vercel use its default Python runtime and installs dependencies from `requirements.txt`.
 
 In Vercel:
 
