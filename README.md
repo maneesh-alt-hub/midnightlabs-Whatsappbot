@@ -163,8 +163,8 @@ In Vercel:
 3. Add every variable from `.env.example` in Project Settings / Environment Variables.
 4. Do not upload `.env`.
 5. Deploy.
-6. Open `https://your-vercel-domain.vercel.app/` and check for the health JSON.
-7. Set Meta's callback URL to `https://your-vercel-domain.vercel.app/webhook`.
+6. Open `https://your-vercel-domain.vercel.app/api` and check for the health JSON.
+7. Set Meta's callback URL to `https://your-vercel-domain.vercel.app/api/webhook`.
 8. Keep the same `WHATSAPP_VERIFY_TOKEN` in Vercel and Meta.
 
 For Vercel, keep:
