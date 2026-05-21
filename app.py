@@ -41,6 +41,28 @@ def health() -> tuple[dict[str, str], int]:
     return {"status": "ok", "service": "whatsapp-gemini-agent"}, 200
 
 
+@app.get("/debug/config")
+@app.get("/api/debug/config")
+def debug_config() -> tuple[dict[str, object], int]:
+    supplied_verify_token = request.args.get("verify_token", "")
+    return {
+        "status": "ok",
+        "env": {
+            "WHATSAPP_VERIFY_TOKEN": bool(settings.whatsapp_verify_token),
+            "WHATSAPP_ACCESS_TOKEN": bool(settings.whatsapp_access_token),
+            "WHATSAPP_PHONE_NUMBER_ID": bool(settings.whatsapp_phone_number_id),
+            "WHATSAPP_BUSINESS_ACCOUNT_ID": bool(settings.whatsapp_business_account_id),
+            "WHATSAPP_APP_SECRET": bool(settings.whatsapp_app_secret),
+            "GEMINI_API_KEY": bool(settings.gemini_api_key),
+            "ADMIN_API_KEY": bool(settings.admin_api_key),
+        },
+        "verify_token_matches_query": bool(
+            supplied_verify_token
+            and supplied_verify_token == settings.whatsapp_verify_token
+        ),
+    }, 200
+
+
 @app.get("/api/admin/templates")
 @app.get("/admin/templates")
 def list_templates() -> tuple[Response, int] | Response:
