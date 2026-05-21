@@ -52,6 +52,7 @@ class Settings:
     )
     max_reply_chars: int = _get_int("MAX_REPLY_CHARS", 3500)
     process_messages_async: bool = _get_bool("PROCESS_MESSAGES_ASYNC", False)
+    max_incoming_message_age_seconds: int = _get_int("MAX_INCOMING_MESSAGE_AGE_SECONDS", 300)
 
     agency_name: str = os.getenv("AGENCY_NAME", "Midnight Labs")
     agency_description: str = os.getenv(

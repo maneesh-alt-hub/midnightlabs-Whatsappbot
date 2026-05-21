@@ -1,4 +1,5 @@
 import logging
+import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
 
@@ -132,6 +133,14 @@ def receive_webhook() -> Response | tuple[Response, int]:
     payload = request.get_json(silent=True) or {}
     incoming_messages = parse_incoming_text_messages(payload)
     for incoming in incoming_messages:
+        if is_stale_message(incoming.timestamp):
+            logger.info(
+                "Ignoring stale WhatsApp message id=%s from=%s timestamp=%s",
+                incoming.message_id,
+                incoming.from_number,
+                incoming.timestamp,
+            )
+            continue
         if mark_processed(incoming.message_id):
             if settings.process_messages_async:
                 executor.submit(handle_message, incoming)
@@ -149,6 +158,13 @@ def mark_processed(message_id: str) -> bool:
     return True
 
 
+def is_stale_message(timestamp: int | None) -> bool:
+    if timestamp is None or settings.max_incoming_message_age_seconds <= 0:
+        return False
+    age_seconds = int(time.time()) - timestamp
+    return age_seconds > settings.max_incoming_message_age_seconds
+
+
 def require_admin() -> tuple[Response, int] | None:
     if not settings.admin_api_key:
         return jsonify({"error": "ADMIN_API_KEY is not configured"}), 503
@@ -162,7 +178,13 @@ def require_admin() -> tuple[Response, int] | None:
 
 def handle_message(incoming) -> None:
     try:
-        logger.info("Incoming WhatsApp message from %s: %s", incoming.from_number, incoming.text)
+        logger.info(
+            "Incoming WhatsApp message id=%s from=%s timestamp=%s text=%s",
+            incoming.message_id,
+            incoming.from_number,
+            incoming.timestamp,
+            incoming.text,
+        )
         reply = get_agent().reply(
             user_id=incoming.from_number,
             user_text=incoming.text,

@@ -17,6 +17,7 @@ class IncomingMessage:
     message_id: str
     from_number: str
     text: str
+    timestamp: int | None = None
     display_name: str | None = None
 
 
@@ -151,6 +152,7 @@ def parse_incoming_text_messages(payload: dict[str, Any]) -> list[IncomingMessag
                 from_number = message.get("from")
                 text = message.get("text", {}).get("body")
                 message_id = message.get("id")
+                timestamp = parse_timestamp(message.get("timestamp"))
                 if not from_number or not text or not message_id:
                     continue
                 messages.append(
@@ -158,8 +160,18 @@ def parse_incoming_text_messages(payload: dict[str, Any]) -> list[IncomingMessag
                         message_id=message_id,
                         from_number=from_number,
                         text=text,
+                        timestamp=timestamp,
                         display_name=contacts_by_wa_id.get(from_number),
                     )
                 )
 
     return messages
+
+
+def parse_timestamp(value: Any) -> int | None:
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
