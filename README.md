@@ -35,6 +35,12 @@ GEMINI_FALLBACK_MODELS=gemini-2.5-flash,gemini-2.0-flash-lite,gemini-2.0-flash
 BOT_SYSTEM_PROMPT=You are a helpful WhatsApp assistant. Keep replies concise, friendly, and useful.
 MAX_REPLY_CHARS=3500
 PROCESS_MESSAGES_ASYNC=false
+AGENCY_NAME=Midnight Labs
+AGENCY_DESCRIPTION=a digital agency that helps clients with websites, automation, AI agents, and launch systems
+AGENCY_SERVICES=websites, landing pages, WhatsApp automation, AI chatbots, product launch funnels, and custom software
+AGENCY_CONTACT=Reply here and our team will follow up.
+AGENCY_BOOKING_LINK=
+AGENCY_PORTFOLIO_LINK=
 ```
 
 Run the Flask app:
@@ -129,10 +135,34 @@ For templates with headers, buttons, images, or more complex variables, pass Met
 - `GET /webhook` handles Meta's webhook verification challenge.
 - `POST /webhook` receives WhatsApp events.
 - Text messages are parsed from Meta's webhook payload.
-- The app sends the conversation context to Gemini.
+- The bot shows a menu for agency-related support and sales questions.
+- Gemini answers only inside the selected agency topic.
+- Unrelated questions are politely refused and redirected back to the menu.
 - The generated reply is sent back through `/{PHONE_NUMBER_ID}/messages`.
 - `POST /admin/send-template` sends approved template messages.
 - `GET /admin/templates` lists templates for your WhatsApp Business Account.
+
+## Agency Bot Menu
+
+The bot is intentionally not a general ChatGPT clone. Users are guided through:
+
+1. Services we offer
+2. Pricing / package fit
+3. Start a new project
+4. Existing project support
+5. Portfolio / case studies
+6. Talk to a human
+
+Customize the agency copy with:
+
+```env
+AGENCY_NAME=Midnight Labs
+AGENCY_DESCRIPTION=your short agency description
+AGENCY_SERVICES=your services list
+AGENCY_CONTACT=how a lead can reach your team
+AGENCY_BOOKING_LINK=https://your-booking-link
+AGENCY_PORTFOLIO_LINK=https://your-portfolio-link
+```
 
 ## Notes
 

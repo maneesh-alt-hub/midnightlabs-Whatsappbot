@@ -48,10 +48,23 @@ class Settings:
 
     bot_system_prompt: str = os.getenv(
         "BOT_SYSTEM_PROMPT",
-        "You are a helpful WhatsApp assistant. Keep replies concise, friendly, and useful.",
+        "You are a helpful WhatsApp assistant for this agency. Keep replies concise, friendly, and useful.",
     )
     max_reply_chars: int = _get_int("MAX_REPLY_CHARS", 3500)
     process_messages_async: bool = _get_bool("PROCESS_MESSAGES_ASYNC", False)
+
+    agency_name: str = os.getenv("AGENCY_NAME", "Midnight Labs")
+    agency_description: str = os.getenv(
+        "AGENCY_DESCRIPTION",
+        "a digital agency that helps clients with websites, automation, AI agents, and launch systems",
+    )
+    agency_services: str = os.getenv(
+        "AGENCY_SERVICES",
+        "websites, landing pages, WhatsApp automation, AI chatbots, product launch funnels, and custom software",
+    )
+    agency_contact: str = os.getenv("AGENCY_CONTACT", "Reply here and our team will follow up.")
+    agency_booking_link: str = os.getenv("AGENCY_BOOKING_LINK", "")
+    agency_portfolio_link: str = os.getenv("AGENCY_PORTFOLIO_LINK", "")
 
 
 settings = Settings()
