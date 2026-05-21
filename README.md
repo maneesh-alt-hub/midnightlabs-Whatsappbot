@@ -130,6 +130,40 @@ Invoke-RestMethod `
 
 For templates with headers, buttons, images, or more complex variables, pass Meta-compatible `components` JSON instead of `body_parameters`.
 
+## Bulk Messaging Previous Customers
+
+Use bulk sending only for customers who have opted in to receive WhatsApp messages from you. For customers outside the 24-hour service window, send an approved WhatsApp template, not a normal text message.
+
+Create a CSV:
+
+```csv
+phone,name,opt_in
+91XXXXXXXXXX,Maneesh,yes
+91YYYYYYYYYY,Example Customer,no
+```
+
+Dry run first:
+
+```powershell
+.\.venv\Scripts\python.exe bulk_send.py `
+  --csv contacts.example.csv `
+  --template new_product_launch `
+  --language en_US `
+  --dry-run
+```
+
+Send to opted-in contacts:
+
+```powershell
+.\.venv\Scripts\python.exe bulk_send.py `
+  --csv contacts.csv `
+  --template new_product_launch `
+  --language en_US `
+  --delay 2
+```
+
+The included script sends one approved template at a time and skips rows where `opt_in` is not `yes`, `true`, or `1`. For large lists, use small batches and monitor your WhatsApp quality rating, delivery, blocks, and opt-outs.
+
 ## How It Works
 
 - `GET /webhook` handles Meta's webhook verification challenge.
