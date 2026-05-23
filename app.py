@@ -42,6 +42,12 @@ def health() -> tuple[dict[str, str], int]:
     return {"status": "ok", "service": "whatsapp-gemini-agent"}, 200
 
 
+@app.get("/favicon.ico")
+@app.get("/favicon.png")
+def favicon() -> Response:
+    return Response(status=204)
+
+
 @app.get("/debug/config")
 @app.get("/api/debug/config")
 def debug_config() -> tuple[dict[str, object], int]:
